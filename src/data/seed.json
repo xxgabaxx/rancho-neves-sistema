@@ -1,0 +1,1308 @@
+{
+  "meta": {
+    "sourceFile": "d:\\Users\\DSJOI\\Downloads\\Controle Total - Rancho das Neves .xlsx",
+    "generatedAt": "2026-05-09T03:16:17"
+  },
+  "listas": {
+    "plataformas": [
+      "Airbnb",
+      "Booking",
+      "Direto / WhatsApp",
+      "Indicação",
+      "Agência / parceiro",
+      "Multitemporada",
+      "Expedia",
+      "Outro"
+    ],
+    "cabanas": [
+      "Chalet Paris",
+      "Chalet Mônaco",
+      "Casa Rosalina",
+      "Chalet Joaquina",
+      "Chalet do Lago",
+      "Chalet Hortênsia",
+      "Chalet Lavanda"
+    ],
+    "formas_pgto": [
+      "PIX",
+      "Dinheiro",
+      "Cartão de Crédito",
+      "Cartão de Débito",
+      "Transferência",
+      "Airbnb",
+      "Booking",
+      "Multitemporada",
+      "Expedia",
+      "Outro"
+    ],
+    "responsavel": [
+      "Cleo",
+      "Sr Reginaldo",
+      "Cândido",
+      "Outros"
+    ],
+    "status": [
+      "Recebido",
+      "Pendente",
+      "Parcial",
+      "Cancelado",
+      "Aguardando repasse MT",
+      "Conferir repasse",
+      "Reservado"
+    ],
+    "receitas_extra": [
+      "Ensaio fotográfico",
+      "Casamento / evento",
+      "Day use",
+      "Decoração / surpresa",
+      "Taxa extra",
+      "Cavalgada",
+      "Quadriciclo",
+      "Taxa de limpeza",
+      "Outra receita"
+    ],
+    "centro_custo": [
+      "Chalet Paris",
+      "Chalet Mônaco",
+      "Casa Rosalina",
+      "Chalet Joaquina",
+      "Chalet do Lago",
+      "Chalet Hortênsia",
+      "Chalet Lavanda",
+      "Cavalos",
+      "Cozinha",
+      "Área externa",
+      "Administrativo",
+      "Geral",
+      "Extras"
+    ],
+    "categorias_despesa": [
+      "Limpeza",
+      "Lavanderia",
+      "Manutenção",
+      "Compra de insumos",
+      "Energia",
+      "Internet",
+      "Funcionário",
+      "Ração",
+      "Veterinário",
+      "Ferrador",
+      "Marketing",
+      "Impostos / taxas",
+      "Salário",
+      "Outro"
+    ],
+    "fixo_variavel": [
+      "Fixo",
+      "Variável"
+    ],
+    "tipo_mov": [
+      "Receita",
+      "Despesa"
+    ],
+    "categorias_cavalos": [
+      "Cavalgada",
+      "Aluguel de cavalo",
+      "Ração",
+      "Veterinário",
+      "Medicamentos",
+      "Equipamentos",
+      "Manutenção",
+      "Outra"
+    ],
+    "gestao_reserva": [
+      "Multitemporada",
+      "Interno / direto"
+    ],
+    "canais_ota": [
+      "Airbnb",
+      "Booking",
+      "Expedia",
+      "VRBO",
+      "Decolar.com",
+      "Multitemporada",
+      "Site próprio",
+      "WhatsApp direto",
+      "Outro"
+    ],
+    "status_repasse": [
+      "Não se aplica",
+      "Aguardando",
+      "Recebido",
+      "Recebido parcial",
+      "Divergência",
+      "Reservado"
+    ],
+    "cabanas_full": [
+      "Chalet Paris",
+      "Chalet Mônaco",
+      "Casa Rosalina",
+      "Chalet Joaquina",
+      "Chalet do Lago",
+      "Chalet Hortênsia",
+      "Chalet Lavanda"
+    ],
+    "periodos_tarifas": [
+      "Abril a Maio",
+      "Feriados Abr e Mai (2 dias)",
+      "Feriados Abr e Jun (3 dias)",
+      "Junho a Agosto",
+      "Setembro a Dezembro",
+      "Feriados Set a Dez (3 dias)"
+    ],
+    "itens_estoque": [
+      "Água sem gás",
+      "Água com gás",
+      "Refrigerante",
+      "Suco",
+      "Cerveja",
+      "Vinho",
+      "Espumante",
+      "Pão",
+      "Queijo",
+      "Presunto",
+      "Manteiga",
+      "Geleia",
+      "Fruta",
+      "Ovos",
+      "Leite",
+      "Café",
+      "Achocolatado",
+      "Carne",
+      "Massa",
+      "Molho",
+      "Lenha",
+      "Carvão",
+      "Ração",
+      "Outro"
+    ]
+  },
+  "otas": [
+    {
+      "Canal / OTA": "Multitemporada",
+      "Comissão OTA %": 0.05,
+      "Correção %": 0.06,
+      "Taxa MT %": 0.1,
+      "Observação": "Percentuais da calculadora enviada",
+      "Aplicação": "Canal próprio operado pela MT"
+    },
+    {
+      "Canal / OTA": "Airbnb",
+      "Comissão OTA %": 0.165,
+      "Correção %": 0.2,
+      "Taxa MT %": 0.1,
+      "Observação": "Percentuais da calculadora enviada",
+      "Aplicação": "Aplicar às reservas do Airbnb"
+    },
+    {
+      "Canal / OTA": "Booking",
+      "Comissão OTA %": 0.13,
+      "Correção %": 0.16,
+      "Taxa MT %": 0.1,
+      "Observação": "Percentuais da calculadora enviada",
+      "Aplicação": "Aplicar às reservas do Booking"
+    },
+    {
+      "Canal / OTA": "VRBO",
+      "Comissão OTA %": 0.12,
+      "Correção %": 0.13,
+      "Taxa MT %": 0.1,
+      "Observação": "Percentuais da calculadora enviada",
+      "Aplicação": "Aplicar às reservas do VRBO"
+    },
+    {
+      "Canal / OTA": "Decolar.com",
+      "Comissão OTA %": 0.15,
+      "Correção %": 0.18,
+      "Taxa MT %": 0.1,
+      "Observação": "Percentuais da calculadora enviada",
+      "Aplicação": "Aplicar às reservas da Decolar"
+    },
+    {
+      "Canal / OTA": "Expedia",
+      "Comissão OTA %": 0.17,
+      "Correção %": 0.21,
+      "Taxa MT %": 0.1,
+      "Observação": "Percentuais da calculadora enviada",
+      "Aplicação": "Aplicar às reservas da Expedia"
+    },
+    {
+      "Canal / OTA": "Site próprio",
+      "Comissão OTA %": 0,
+      "Correção %": 0,
+      "Taxa MT %": 0,
+      "Observação": "Venda direta",
+      "Aplicação": "Sem OTA"
+    },
+    {
+      "Canal / OTA": "WhatsApp direto",
+      "Comissão OTA %": 0,
+      "Correção %": 0,
+      "Taxa MT %": 0,
+      "Observação": "Venda direta",
+      "Aplicação": "Sem OTA"
+    },
+    {
+      "Canal / OTA": "Outro",
+      "Comissão OTA %": 0,
+      "Correção %": 0,
+      "Taxa MT %": 0,
+      "Observação": "Preencher manualmente quando necessário",
+      "Aplicação": "Canal não padronizado"
+    },
+    {
+      "Canal / OTA": "Notas",
+      "Comissão OTA %": null,
+      "Correção %": null,
+      "Taxa MT %": null,
+      "Observação": null,
+      "Aplicação": null
+    },
+    {
+      "Canal / OTA": "1) Percentuais extraídos da calculadora enviada da Multitemporada.",
+      "Comissão OTA %": null,
+      "Correção %": null,
+      "Taxa MT %": null,
+      "Observação": null,
+      "Aplicação": null
+    },
+    {
+      "Canal / OTA": "2) A tabela de diárias representa 90% proprietário e 10% Multitemporada.",
+      "Comissão OTA %": null,
+      "Correção %": null,
+      "Taxa MT %": null,
+      "Observação": null,
+      "Aplicação": null
+    },
+    {
+      "Canal / OTA": "3) As OTAs aplicam sua comissão acima do valor base, elevando o preço final do hóspede.",
+      "Comissão OTA %": null,
+      "Correção %": null,
+      "Taxa MT %": null,
+      "Observação": null,
+      "Aplicação": null
+    }
+  ],
+  "tarifasBase": [
+    {
+      "Período": "Abril a Maio",
+      "Tipo": "Seg-Sex e Dom",
+      "1 diária": 650,
+      "2 diárias": 500,
+      "3 diárias": 475,
+      "Pacote": null,
+      "Tarifa base em": 2,
+      "Observação": null
+    },
+    {
+      "Período": "Abril a Maio",
+      "Tipo": "Sábado",
+      "1 diária": 750,
+      "2 diárias": 600,
+      "3 diárias": 550,
+      "Pacote": null,
+      "Tarifa base em": 2,
+      "Observação": null
+    },
+    {
+      "Período": "Feriados Abr e Mai (2 dias)",
+      "Tipo": "Pacote",
+      "1 diária": null,
+      "2 diárias": null,
+      "3 diárias": null,
+      "Pacote": "1500",
+      "Tarifa base em": 2,
+      "Observação": "Pacote de até 2 diárias"
+    },
+    {
+      "Período": "Feriados Abr e Jun (3 dias)",
+      "Tipo": "Pacote",
+      "1 diária": null,
+      "2 diárias": null,
+      "3 diárias": null,
+      "Pacote": "2250",
+      "Tarifa base em": 2,
+      "Observação": "Pacote de até 3 diárias"
+    },
+    {
+      "Período": "Junho a Agosto",
+      "Tipo": "Seg-Sex e Dom",
+      "1 diária": 700,
+      "2 diárias": 550,
+      "3 diárias": 500,
+      "Pacote": null,
+      "Tarifa base em": 2,
+      "Observação": null
+    },
+    {
+      "Período": "Junho a Agosto",
+      "Tipo": "Sábado",
+      "1 diária": 850,
+      "2 diárias": 700,
+      "3 diárias": 650,
+      "Pacote": null,
+      "Tarifa base em": 2,
+      "Observação": null
+    },
+    {
+      "Período": "Set a Dez",
+      "Tipo": "Seg-Sex e Dom",
+      "1 diária": 650,
+      "2 diárias": 500,
+      "3 diárias": 475,
+      "Pacote": null,
+      "Tarifa base em": 2,
+      "Observação": null
+    },
+    {
+      "Período": "Set a Dez",
+      "Tipo": "Sábado",
+      "1 diária": 750,
+      "2 diárias": 600,
+      "3 diárias": 550,
+      "Pacote": null,
+      "Tarifa base em": 2,
+      "Observação": null
+    },
+    {
+      "Período": "Feriados Set a Dez (3 dias)",
+      "Tipo": "Pacote",
+      "1 diária": null,
+      "2 diárias": null,
+      "3 diárias": null,
+      "Pacote": "2250",
+      "Tarifa base em": 2,
+      "Observação": "Pacote de até 3 diárias"
+    },
+    {
+      "Período": "Taxas adicionais",
+      "Tipo": null,
+      "1 diária": null,
+      "2 diárias": "Regras operacionais",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    },
+    {
+      "Período": "Pessoa extra (por pessoa e por diária)",
+      "Tipo": 200,
+      "1 diária": null,
+      "2 diárias": "Quanto maior a estadia, mais atrativo fica o valor comercial.",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    },
+    {
+      "Período": "Taxa de limpeza (1x por estadia)",
+      "Tipo": 150,
+      "1 diária": null,
+      "2 diárias": "Taxa de limpeza é aplicada uma vez por estadia.",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    },
+    {
+      "Período": "Taxa pet (1x por pet por estadia)",
+      "Tipo": 120,
+      "1 diária": null,
+      "2 diárias": "Taxa pet é aplicada uma vez por estadia e por pet.",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    },
+    {
+      "Período": null,
+      "Tipo": null,
+      "1 diária": null,
+      "2 diárias": "Pessoa extra é aplicada por pessoa e por diária.",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    },
+    {
+      "Período": null,
+      "Tipo": null,
+      "1 diária": null,
+      "2 diárias": "Quando a célula estiver sem tarifa, vale a tarifa anterior.",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    },
+    {
+      "Período": null,
+      "Tipo": null,
+      "1 diária": null,
+      "2 diárias": "Pacotes podem ser usados mesmo com menos dias; cobra-se o valor do pacote.",
+      "3 diárias": null,
+      "Pacote": null,
+      "Tarifa base em": null,
+      "Observação": null
+    }
+  ],
+  "ajusteUnidades": [
+    {
+      "Unidade": "Chalet Paris",
+      "Variação %": 0,
+      "Capacidade": "Até 4 pessoas",
+      "Observação": "Igual à tabela base"
+    },
+    {
+      "Unidade": "Chalet Mônaco",
+      "Variação %": 0,
+      "Capacidade": "Até 4 pessoas",
+      "Observação": "Igual à tabela base"
+    },
+    {
+      "Unidade": "Casa Rosalina",
+      "Variação %": 0.25,
+      "Capacidade": "Confirmar",
+      "Observação": "Tabela base +25%"
+    },
+    {
+      "Unidade": "Chalet Joaquina",
+      "Variação %": 0.15,
+      "Capacidade": "Confirmar",
+      "Observação": "Tabela base +15%"
+    },
+    {
+      "Unidade": "Chalet do Lago",
+      "Variação %": 0,
+      "Capacidade": "Confirmar",
+      "Observação": "Igual à tabela base"
+    },
+    {
+      "Unidade": "Chalet Hortênsia",
+      "Variação %": -0.15,
+      "Capacidade": "Confirmar",
+      "Observação": "Tabela base -15%"
+    },
+    {
+      "Unidade": "Chalet Lavanda",
+      "Variação %": -0.15,
+      "Capacidade": "Confirmar",
+      "Observação": "Tabela base -15%"
+    },
+    {
+      "Unidade": "Observação importante",
+      "Variação %": null,
+      "Capacidade": null,
+      "Observação": null
+    },
+    {
+      "Unidade": "Tarifa base em 2 pessoas. Paris e Mônaco atendem até 4 pessoas. Pessoa extra = R$ 200 por pessoa e por diária.",
+      "Variação %": null,
+      "Capacidade": null,
+      "Observação": null
+    }
+  ],
+  "cardapio": [
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    },
+    {
+      "Produto": null,
+      "Categoria": null,
+      "Descrição": null,
+      "Unidade": null,
+      "Custo unitário": null,
+      "Preço de venda": null,
+      "Ativo?": "Sim",
+      "Observação": null
+    }
+  ],
+  "estoque": [
+    {
+      "Produto": "Água sem gás",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Água com gás",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Refrigerante",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Suco",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Cerveja",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Vinho",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Espumante",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Pão",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Queijo",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Presunto",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Manteiga",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Geleia",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Fruta",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Ovos",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Leite",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Café",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Achocolatado",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Carne",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Massa",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Molho",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Lenha",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Carvão",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    },
+    {
+      "Produto": "Ração",
+      "Descrição": null,
+      "Qtd. inicial / comprada": null,
+      "Qtd. consumida": 0,
+      "Qtd. atual": null,
+      "Unidade": null,
+      "Valor compra unitário": null,
+      "Qtd. mínima": null,
+      "Data da compra": null,
+      "Observações": null
+    }
+  ],
+  "reservas": [],
+  "receitasExtras": [],
+  "despesas": [],
+  "consumos": [],
+  "movCavalos": [],
+  "horses": [],
+  "ridingActivities": [],
+  "ridingReservations": [],
+  "horseHealthRecords": [],
+  "ingredients": [],
+  "menuProducts": [],
+  "recipeItems": [],
+  "stockMovements": [],
+  "suppliers": [],
+  "purchaseInvoices": [],
+  "purchaseInvoiceItems": [],
+  "supplierProductMappings": [],
+  "accountsPayable": [],
+  "guestProfiles": [],
+  "users": [],
+  "roles": [],
+  "rolePermissions": [],
+  "auditLogs": [],
+  "repasses": []
+}
