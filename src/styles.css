@@ -1742,3 +1742,15 @@ th {
     padding: 0;
   }
 }
+
+.topActions .logoutButton {
+  display: inline-flex !important;
+  min-height: 38px;
+  background: #7a3c32;
+  color: #ffffff;
+  padding: 9px 14px;
+  border-radius: 7px;
+  border: 0;
+  font-weight: 800;
+  cursor: pointer;
+}

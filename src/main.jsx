@@ -353,7 +353,7 @@ function App() {
                         )}
 
                         <button
-                            className="ghostButton"
+                            className="logoutButton"
                             onClick={lockSystem}
                         >
                             Sair
