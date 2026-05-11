@@ -2041,7 +2041,8 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
 
         const role = getRole(userForm.roleId, roles);
 
-        addUser({
+        const newUser = {
+            id: `USR-${Date.now()}`,
             name: userForm.name,
             username: userForm.username,
             email: userForm.email,
@@ -2049,34 +2050,29 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
             roleId: role?.id || userForm.roleId,
             roleName: role?.name || "",
             active: userForm.active !== false,
-        });
+        };
+
+        addUser(newUser);
 
         setUserForm({
             active: true,
             roleId: data.roles?.[0]?.id || "ROLE-RECEPCAO"
         });
 
-        setTimeout(async () => {
-            try {
-                await store.syncNow({
-                    ...data,
-                    users: [
-                        ...data.users,
-                        {
-                            name: userForm.name,
-                            username: userForm.username,
-                            email: userForm.email,
-                            pin: userForm.pin,
-                            roleId: role?.id || userForm.roleId,
-                            roleName: role?.name || "",
-                            active: userForm.active !== false,
-                        }
-                    ]
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }, 500);
+        try {
+            await store.syncNow({
+                ...data,
+                users: [
+                    ...(data.users ?? []),
+                    newUser
+                ]
+            });
+
+            alert("Usuário criado e enviado para o Google Sheets.");
+        } catch (error) {
+            console.error(error);
+            alert("Usuário criado localmente, mas não foi enviado para o Google Sheets.");
+        }
     };
   const submitRole = (event) => {
     event.preventDefault();
