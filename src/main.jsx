@@ -2069,11 +2069,11 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
             });
 
             alert("Usuário criado e enviado para o Google Sheets.");
-       catch (error) {
-                console.error(error);
-                alert(error?.message || JSON.stringify(error));
-                alert("Usuário criado localmente, mas não foi enviado para o Google Sheets.");
-            }
+        } catch (error) {
+            console.error(error);
+            alert(error?.message || JSON.stringify(error));
+            alert("Usuário criado localmente, mas não foi enviado para o Google Sheets.");
+        }
     };
   const submitRole = (event) => {
     event.preventDefault();
