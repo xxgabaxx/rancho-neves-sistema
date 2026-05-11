@@ -32,7 +32,7 @@ import {
   parseDate,
   reservationOverlaps,
 } from "./lib/calculations.js";
-import { pushToGoogleSheets, syncStatusLabel } from "./lib/googleSheets.js";
+import { pullFromGoogleSheets, pushToGoogleSheets, syncStatusLabel } from "./lib/googleSheets.js";
 import "./styles.css";
 
 const tabs = [
@@ -462,123 +462,173 @@ function App() {
 }
 
 function AuthGate({ users = [], onAuthenticated }) {
-  const [user, setUser] = useState(localStorage.getItem("rks-last-user") || import.meta.env.VITE_APP_ACCESS_USER || "");
-  const [pin, setPin] = useState("");
-  const [showPin, setShowPin] = useState(false);
-  const [remember, setRemember] = useState(true);
-  const [error, setError] = useState("");
-  const expectedUser = import.meta.env.VITE_APP_ACCESS_USER;
-  const expectedPin = import.meta.env.VITE_APP_ACCESS_PIN;
-  const submit = (event) => {
-    event.preventDefault();
-    const account = users.find((item) => item.active !== false && String(item.username ?? "").trim().toLowerCase() === user.trim().toLowerCase());
-    const fallbackAllowed = expectedUser && expectedPin && user.trim().toLowerCase() === expectedUser.toLowerCase() && pin.trim() === expectedPin;
-    if (!account && !fallbackAllowed) {
-      setError("Usuário não autorizado.");
-      setPin("");
-      return;
-    }
-    if (account && pin.trim() !== String(account.pin ?? "")) {
-      setError("PIN incorreto.");
-      setPin("");
-      return;
-    }
-    const authenticatedUser = account?.username || expectedUser;
-    sessionStorage.setItem("rks-authenticated", "true");
-    sessionStorage.setItem("rks-user", authenticatedUser);
-    if (remember) {
-      localStorage.setItem("rks-last-user", authenticatedUser);
-    }
-    onAuthenticated(authenticatedUser);
-  };
+    const [user, setUser] = useState(localStorage.getItem("rks-last-user") || import.meta.env.VITE_APP_ACCESS_USER || "");
+    const [pin, setPin] = useState("");
+    const [showPin, setShowPin] = useState(false);
+    const [remember, setRemember] = useState(true);
+    const [error, setError] = useState("");
+    const [remoteUsers, setRemoteUsers] = useState(users);
+    const [loadingUsers, setLoadingUsers] = useState(false);
 
-  return (
-    <main className="authShell">
-      <div className="authBg">
-        {authPhotos.map((photo, index) => (
-          <span key={photo} className="authSlide" style={{ backgroundImage: `url("${photo}")`, animationDelay: `${index * 5}s` }} />
-        ))}
-      </div>
-      <div className="authOverlay" />
-      <div className="authSnow" aria-hidden="true">
-        {Array.from({ length: 26 }, (_, index) => (
-          <span key={index} style={{
-            left: `${(index * 37) % 100}%`,
-            animationDelay: `${-(index * 0.71).toFixed(2)}s`,
-            animationDuration: `${12 + (index % 8)}s`,
-          }} />
-        ))}
-      </div>
-      <header className="authTopbar">
-        <div className="authClientMark">
-          <BedDouble size={22} />
-          <div>
-            <strong>Rancho das Neves</strong>
-            <span>Rancho Queimado · SC</span>
-          </div>
-        </div>
-        <div className="authStatus"><i /> Sistema Online</div>
-      </header>
-      <section className="authMain">
-        <form className="authCard" onSubmit={submit}>
-          <div className="authCardHeader">
-            <div className="authBrandRow">
-              <img className="authLogo" src="/brand/rks-hotelaria.png" alt="RKS Hotelaria" />
+    const expectedUser = import.meta.env.VITE_APP_ACCESS_USER;
+    const expectedPin = import.meta.env.VITE_APP_ACCESS_PIN;
+
+    useEffect(() => {
+        async function loadUsers() {
+            setLoadingUsers(true);
+
+            try {
+                const pulled = await pullFromGoogleSheets();
+
+                if (pulled?.users?.length) {
+                    setRemoteUsers(pulled.users);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoadingUsers(false);
+            }
+        }
+
+        loadUsers();
+    }, []);
+
+    const submit = (event) => {
+        event.preventDefault();
+
+        const account = remoteUsers.find(
+            (item) =>
+                item.active !== false &&
+                String(item.username ?? "").trim().toLowerCase() === user.trim().toLowerCase()
+        );
+
+        const fallbackAllowed =
+            expectedUser &&
+            expectedPin &&
+            user.trim().toLowerCase() === expectedUser.toLowerCase() &&
+            pin.trim() === expectedPin;
+
+        if (!account && !fallbackAllowed) {
+            setError("Usuário não autorizado.");
+            setPin("");
+            return;
+        }
+
+        if (account && pin.trim() !== String(account.pin ?? "")) {
+            setError("PIN incorreto.");
+            setPin("");
+            return;
+        }
+
+        const authenticatedUser = account?.username || expectedUser;
+
+        sessionStorage.setItem("rks-authenticated", "true");
+        sessionStorage.setItem("rks-user", authenticatedUser);
+
+        if (remember) {
+            localStorage.setItem("rks-last-user", authenticatedUser);
+        }
+
+        onAuthenticated(authenticatedUser);
+    };
+
+    return (
+        <main className="authShell">
+            <div className="authBg">
+                {authPhotos.map((photo, index) => (
+                    <span key={photo} className="authSlide" style={{ backgroundImage: `url("${photo}")`, animationDelay: `${index * 5}s` }} />
+                ))}
             </div>
-            <img className="authClientLogo" src="/brand/rancho-das-neves-logo.png" alt="Rancho das Neves" />
-            <p className="eyebrow">Acesso protegido</p>
-            <h1>Bem-vindo de volta</h1>
-            <span>Painel de gestão · Rancho das Neves</span>
-          </div>
-          <div className="authDivider" />
-          <label className="authField" htmlFor="access-user">
-            <span>Usuário / E-mail</span>
-            <input
-              id="access-user"
-              type="text"
-              autoComplete="username"
-              placeholder="admin"
-              value={user}
-              onChange={(event) => setUser(event.target.value)}
-              autoFocus
-            />
-          </label>
-          <label className="authField" htmlFor="access-pin">
-            <span>PIN / Senha</span>
-            <div className="authPassword">
-              <input
-                id="access-pin"
-                type={showPin ? "text" : "password"}
-                inputMode="numeric"
-                autoComplete="current-password"
-                placeholder="••••••"
-                value={pin}
-                onChange={(event) => setPin(event.target.value)}
-              />
-              <button type="button" onClick={() => setShowPin((current) => !current)}>
-                {showPin ? "Ocultar" : "Ver"}
-              </button>
+            <div className="authOverlay" />
+            <div className="authSnow" aria-hidden="true">
+                {Array.from({ length: 26 }, (_, index) => (
+                    <span key={index} style={{
+                        left: `${(index * 37) % 100}%`,
+                        animationDelay: `${-(index * 0.71).toFixed(2)}s`,
+                        animationDuration: `${12 + (index % 8)}s`,
+                    }} />
+                ))}
             </div>
-          </label>
-          <div className="authOptions">
-            <label>
-              <input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} />
-              <span>Manter usuário</span>
-            </label>
-            <button type="button" onClick={() => setError("Use o PIN cadastrado no .env ou solicite ao administrador.")}>Esqueci o PIN</button>
-          </div>
-          {error && <div className="authNotice">{error}</div>}
-          <button className="authSubmit" type="submit">Entrar no sistema</button>
-          <footer className="authFooter">
-            <span>RKS Hotelaria · v1.0</span>
-            <button type="button" onClick={() => setError("Suporte RKS: configuração local do sistema.")}>Precisa de ajuda?</button>
-          </footer>
-        </form>
-      </section>
-    </main>
-  );
+
+            <header className="authTopbar">
+                <div className="authClientMark">
+                    <BedDouble size={22} />
+                    <div>
+                        <strong>Rancho das Neves</strong>
+                        <span>Rancho Queimado · SC</span>
+                    </div>
+                </div>
+                <div className="authStatus"><i /> {loadingUsers ? "Sincronizando..." : "Sistema Online"}</div>
+            </header>
+
+            <section className="authMain">
+                <form className="authCard" onSubmit={submit}>
+                    <div className="authCardHeader">
+                        <div className="authBrandRow">
+                            <img className="authLogo" src="/brand/rks-hotelaria.png" alt="RKS Hotelaria" />
+                        </div>
+                        <img className="authClientLogo" src="/brand/rancho-das-neves-logo.png" alt="Rancho das Neves" />
+                        <p className="eyebrow">Acesso protegido</p>
+                        <h1>Bem-vindo de volta</h1>
+                        <span>Painel de gestão · Rancho das Neves</span>
+                    </div>
+
+                    <div className="authDivider" />
+
+                    <label className="authField" htmlFor="access-user">
+                        <span>Usuário / E-mail</span>
+                        <input
+                            id="access-user"
+                            type="text"
+                            autoComplete="username"
+                            placeholder="admin"
+                            value={user}
+                            onChange={(event) => setUser(event.target.value)}
+                            autoFocus
+                        />
+                    </label>
+
+                    <label className="authField" htmlFor="access-pin">
+                        <span>PIN / Senha</span>
+                        <div className="authPassword">
+                            <input
+                                id="access-pin"
+                                type={showPin ? "text" : "password"}
+                                inputMode="numeric"
+                                autoComplete="current-password"
+                                placeholder="••••••"
+                                value={pin}
+                                onChange={(event) => setPin(event.target.value)}
+                            />
+                            <button type="button" onClick={() => setShowPin((current) => !current)}>
+                                {showPin ? "Ocultar" : "Ver"}
+                            </button>
+                        </div>
+                    </label>
+
+                    <div className="authOptions">
+                        <label>
+                            <input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} />
+                            <span>Manter usuário</span>
+                        </label>
+                        <button type="button" onClick={() => setError("Use o PIN cadastrado no sistema ou solicite ao administrador.")}>Esqueci o PIN</button>
+                    </div>
+
+                    {error && <div className="authNotice">{error}</div>}
+
+                    <button className="authSubmit" type="submit" disabled={loadingUsers}>
+                        {loadingUsers ? "Sincronizando usuários..." : "Entrar no sistema"}
+                    </button>
+
+                    <footer className="authFooter">
+                        <span>RKS Hotelaria · v1.0</span>
+                        <button type="button" onClick={() => setError("Suporte RKS: configuração local do sistema.")}>Precisa de ajuda?</button>
+                    </footer>
+                </form>
+            </section>
+        </main>
+    );
 }
-
 const authPhotos = [
   "https://www.multitemporada.com/image/d235/6567790c6ed23617fcad57cd/chalet-do-lago-com-banheira-rancho-das-neves?&width=1900",
   "https://www.multitemporada.com/image/d235/65677f27716bdd629d720ae1/casa-rosalina-rancho-das-neves?&width=1900",
