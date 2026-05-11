@@ -32,7 +32,7 @@ import {
   parseDate,
   reservationOverlaps,
 } from "./lib/calculations.js";
-import { syncStatusLabel } from "./lib/googleSheets.js";
+import { pushToGoogleSheets, syncStatusLabel } from "./lib/googleSheets.js";
 import "./styles.css";
 
 const tabs = [
@@ -2060,7 +2060,7 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
         });
 
         try {
-                await syncNow({
+            await pushToGoogleSheets({
                 ...data,
                 users: [
                     ...(data.users ?? []),
