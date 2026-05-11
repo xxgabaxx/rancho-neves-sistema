@@ -1595,10 +1595,26 @@ th {
   }
 }
 
-@media print {
-  body {
-    background: #ffffff;
+@media (max-width: 720px) {
+  .appShell {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
   }
+
+  .sidebar {
+    display: none;
+  }
+
+  .workspace {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+}
 
   .sidebar,
   .topbar,
