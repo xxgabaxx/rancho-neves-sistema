@@ -2058,7 +2058,21 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
 
         setTimeout(async () => {
             try {
-                await store.syncToSheets?.();
+                await store.syncNow({
+                    ...data,
+                    users: [
+                        ...data.users,
+                        {
+                            name: userForm.name,
+                            username: userForm.username,
+                            email: userForm.email,
+                            pin: userForm.pin,
+                            roleId: role?.id || userForm.roleId,
+                            roleName: role?.name || "",
+                            active: userForm.active !== false,
+                        }
+                    ]
+                });
             } catch (error) {
                 console.error(error);
             }
