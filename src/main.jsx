@@ -2056,8 +2056,12 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
             roleId: data.roles?.[0]?.id || "ROLE-RECEPCAO"
         });
 
-        setTimeout(() => {
-            syncNow();
+        setTimeout(async () => {
+            try {
+                await store.syncToSheets?.();
+            } catch (error) {
+                console.error(error);
+            }
         }, 500);
     };
   const submitRole = (event) => {
