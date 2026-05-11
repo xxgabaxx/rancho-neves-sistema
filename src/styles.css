@@ -1596,14 +1596,40 @@ th {
 }
 
 @media (max-width: 720px) {
+
   .appShell {
     display: block;
     width: 100%;
     min-height: 100vh;
   }
 
+  .mobileMenuButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #2e6d43;
+    color: white;
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
   .sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 82%;
+    max-width: 320px;
+    height: 100vh;
+    z-index: 999;
+    transition: left 0.25s ease;
+    overflow-y: auto;
+  }
+
+  .sidebar.mobileOpen {
+    left: 0;
   }
 
   .workspace {
@@ -1622,6 +1648,31 @@ th {
     overflow-x: hidden;
   }
 
+  .topbar,
+  .topActions,
+  .authOptions,
+  .authFooter,
+  .calendarControls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  nav,
+  .kpiGrid,
+  .contentGrid.two,
+  .contentGrid.three,
+  .formGrid,
+  .operationHeader,
+  .operationStats,
+  .reportHeader,
+  .reportHeadline,
+  .documentControls,
+  .signatureGrid,
+  .stayChecklistGrid,
+  .barRow {
+    grid-template-columns: 1fr;
+  }
+
   .panel,
   .formPanel,
   .kpiCard,
@@ -1637,19 +1688,11 @@ th {
   }
 }
 
-  .sidebar {
-    display: none;
-  }
+@media print {
 
-  .workspace {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    padding: 14px;
-    overflow-x: hidden;
-    box-sizing: border-box;
+  body {
+    background: #ffffff;
   }
-}
 
   .sidebar,
   .topbar,

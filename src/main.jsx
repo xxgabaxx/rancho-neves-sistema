@@ -135,30 +135,45 @@ function reservationStatusOptions(data) {
 }
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(() => sessionStorage.getItem("rks-authenticated") === "true");
-  const [currentUser, setCurrentUser] = useState(() => sessionStorage.getItem("rks-user") || "");
-  const [active, setActive] = useState(getInitialTab);
-  const store = useRanchoStore(seed);
-  const stats = useMemo(() => calcDashboard(store.data), [store.data]);
-  const userAccount = getUserAccount(currentUser, store.data.users);
-  const permissionSet = useMemo(() => buildPermissionSet(userAccount, store.data.rolePermissions), [userAccount, store.data.rolePermissions]);
-  const can = (module, action = "ler") => hasPermission(permissionSet, module, action);
-  const visibleTabs = tabs.filter((tab) => can(tab.id, "ler"));
-  const safeActive = can(active, "ler") ? active : (visibleTabs[0]?.id || "dashboard");
-  const ActiveIcon = tabs.find((tab) => tab.id === safeActive)?.icon ?? Gauge;
+    const [authenticated, setAuthenticated] = useState(() => sessionStorage.getItem("rks-authenticated") === "true");
+    const [currentUser, setCurrentUser] = useState(() => sessionStorage.getItem("rks-user") || "");
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [active, setActive] = useState(getInitialTab);
 
-  const audit = (action, collection, id, details = "") => {
-    store.addAuditLog?.({
-      userId: userAccount?.id || "",
-      username: userAccount?.username || currentUser || "",
-      action,
-      module: collectionModules[collection] || collection,
-      collection,
-      recordId: id || "",
-      details,
-      createdAt: new Date().toISOString(),
-    });
-  };
+    const store = useRanchoStore(seed);
+    const stats = useMemo(() => calcDashboard(store.data), [store.data]);
+
+    const userAccount = getUserAccount(currentUser, store.data.users);
+
+    const permissionSet = useMemo(
+        () => buildPermissionSet(userAccount, store.data.rolePermissions),
+        [userAccount, store.data.rolePermissions]
+    );
+
+    const can = (module, action = "ler") =>
+        hasPermission(permissionSet, module, action);
+
+    const visibleTabs = tabs.filter((tab) => can(tab.id, "ler"));
+
+    const safeActive = can(active, "ler")
+        ? active
+        : (visibleTabs[0]?.id || "dashboard");
+
+    const ActiveIcon =
+        tabs.find((tab) => tab.id === safeActive)?.icon ?? Gauge;
+
+    const audit = (action, collection, id, details = "") => {
+        store.addAuditLog?.({
+            userId: userAccount?.id || "",
+            username: userAccount?.username || currentUser || "",
+            action,
+            module: collectionModules[collection] || collection,
+            collection,
+            recordId: id || "",
+            details,
+            createdAt: new Date().toISOString(),
+        });
+    };
   const ensurePermission = (collection, action) => {
     const module = collectionModules[collection] || collection;
     if (can(module, action)) return true;
@@ -252,7 +267,7 @@ function App() {
 
   return (
     <main className="appShell">
-      <aside className="sidebar">
+        <aside className={mobileMenuOpen ? "sidebar mobileOpen" : "sidebar"}>
         <div className="brand">
           <img className="systemLogo" src="/brand/rks-hotelaria.png" alt="RKS Hotelaria" />
           <span className="systemLabel">Sistema RKS Hotelaria</span>
@@ -291,19 +306,38 @@ function App() {
         </div>
       </aside>
 
-      <section className="workspace">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow">Sistema web</p>
-            <h1><ActiveIcon size={26} /> {tabs.find((tab) => tab.id === safeActive)?.label}</h1>
-          </div>
-          <div className="topActions">
-            <span>Fonte: planilha importada</span>
-            {can("reservas", "adicionar") && <button className="primaryButton" onClick={() => changeTab("reservas")}>
-              <Plus size={17} /> Nova reserva
-            </button>}
-          </div>
-        </header>
+          <section className="workspace">
+              <header className="topbar">
+
+                  <button
+                      className="mobileMenuButton"
+                      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  >
+                      ☰ Menu
+                  </button>
+
+                  <div>
+                      <p className="eyebrow">Sistema web</p>
+                      <h1>
+                          <ActiveIcon size={26} />
+                          {tabs.find((tab) => tab.id === safeActive)?.label}
+                      </h1>
+                  </div>
+
+                  <div className="topActions">
+                      <span>Fonte: planilha importada</span>
+
+                      {can("reservas", "adicionar") && (
+                          <button
+                              className="primaryButton"
+                              onClick={() => changeTab("reservas")}
+                          >
+                              <Plus size={17} /> Nova reserva
+                          </button>
+                      )}
+                  </div>
+
+              </header>
 
         {!can(safeActive, "ler") && <AccessDenied module={safeActive} />}
         {safeActive === "dashboard" && <Dashboard stats={stats} data={store.data} />}
