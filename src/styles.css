@@ -1597,11 +1597,18 @@ th {
 
 @media (max-width: 720px) {
 
-  .appShell {
-    display: block;
-    width: 100%;
-    min-height: 100vh;
-  }
+.mobileCloseButton {
+  display: block;
+  width: 100%;
+  background: transparent;
+  color: white;
+  border: 0;
+  font-weight: 900;
+  text-align: right;
+  margin-bottom: 18px;
+  font-size: 16px;
+  cursor: pointer;
+}
 
   .mobileMenuButton {
     display: flex;

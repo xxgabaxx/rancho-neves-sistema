@@ -265,36 +265,51 @@ function App() {
     return <AuthGate users={store.data.users} onAuthenticated={(user) => { setAuthenticated(true); setCurrentUser(user); }} />;
   }
 
-  return (
-    <main className="appShell">
-        <aside className={mobileMenuOpen ? "sidebar mobileOpen" : "sidebar"}>
-        <div className="brand">
-          <img className="systemLogo" src="/brand/rks-hotelaria.png" alt="RKS Hotelaria" />
-          <span className="systemLabel">Sistema RKS Hotelaria</span>
-        </div>
-        <div className="clientBrand">
-          <img className="clientLogo" src="/brand/rancho-das-neves-logo.png" alt="Rancho das Neves" />
-          <div>
-            <strong>Rancho das Neves</strong>
-            <span>Cliente · Controle operacional</span>
-          </div>
-        </div>
-        <nav>
-          {visibleTabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                className={safeActive === tab.id ? "navItem active" : "navItem"}
-                key={tab.id}
-                onClick={() => changeTab(tab.id)}
-                title={tab.label}
-              >
-                <Icon size={18} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+    return (
+        <main className="appShell">
+
+            <aside className={mobileMenuOpen ? "sidebar mobileOpen" : "sidebar"}>
+
+                <button
+                    className="mobileCloseButton"
+                    onClick={() => setMobileMenuOpen(false)}
+                >
+                    Fechar ✕
+                </button>
+
+                <div className="brand">
+                    <img className="systemLogo" src="/brand/rks-hotelaria.png" alt="RKS Hotelaria" />
+                    <span className="systemLabel">Sistema RKS Hotelaria</span>
+                </div>
+
+                <div className="clientBrand">
+                    <img className="clientLogo" src="/brand/rancho-das-neves-logo.png" alt="Rancho das Neves" />
+                    <div>
+                        <strong>Rancho das Neves</strong>
+                        <span>Cliente · Controle operacional</span>
+                    </div>
+                </div>
+
+                <nav>
+                    {visibleTabs.map((tab) => {
+                        const Icon = tab.icon;
+
+                        return (
+                            <button
+                                className={safeActive === tab.id ? "navItem active" : "navItem"}
+                                key={tab.id}
+                                onClick={() => {
+                                    changeTab(tab.id);
+                                    setMobileMenuOpen(false);
+                                }}
+                                title={tab.label}
+                            >
+                                <Icon size={18} />
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
+                </nav>
         <div className="sidebarFooter">
           <div className="userBadge">
             <span>Usuário</span>
