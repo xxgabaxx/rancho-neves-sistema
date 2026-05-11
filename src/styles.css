@@ -502,6 +502,18 @@ nav {
 .topActions {
   display: flex;
   align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ghostButton {
+  min-height: 38px;
+  white-space: nowrap;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
   gap: 12px;
   color: #5c6f61;
   font-size: 14px;
@@ -1518,6 +1530,14 @@ th {
   .authMain {
     width: min(100% - 28px, 460px);
   }
+
+.topActions {
+  width: 100%;
+}
+
+.topActions .ghostButton {
+  width: 100%;
+}
 
   .authTopbar {
     align-items: flex-start;
