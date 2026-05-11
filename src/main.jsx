@@ -2060,7 +2060,7 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
         });
 
         try {
-            await store.syncNow({
+                await syncNow({
                 ...data,
                 users: [
                     ...(data.users ?? []),
