@@ -356,7 +356,7 @@ function App() {
                             className="logoutButton"
                             onClick={lockSystem}
                         >
-                            Sair
+                            LOGOUT
                         </button>
                     </div>
 
