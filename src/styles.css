@@ -1493,10 +1493,11 @@ th {
   }
 
   .sidebar {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
+  position: relative;
+  width: 100%;
+  height: auto;
+  top: auto;
+}
 
   nav {
     grid-template-columns: repeat(4, minmax(0, 1fr));
