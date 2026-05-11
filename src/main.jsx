@@ -298,8 +298,9 @@ function App() {
                             <button
                                 className={safeActive === tab.id ? "navItem active" : "navItem"}
                                 key={tab.id}
-                                onClick={() => {
-                                    changeTab(tab.id);
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    setActive(tab.id);
                                     setMobileMenuOpen(false);
                                 }}
                                 title={tab.label}
