@@ -2036,20 +2036,30 @@ function Usuarios({ data, addUser, addRole, addRolePermission, updateItem, remov
     }
     addRolePermission({ id: `PERM-${roleId}-${module}-${action}`, roleId, module, action, allowed });
   };
-  const submitUser = (event) => {
-    event.preventDefault();
-    const role = getRole(userForm.roleId, roles);
-    addUser({
-      name: userForm.name,
-      username: userForm.username,
-      email: userForm.email,
-      pin: userForm.pin,
-      roleId: role?.id || userForm.roleId,
-      roleName: role?.name || "",
-      active: userForm.active !== false,
-    });
-    setUserForm({ active: true, roleId: data.roles?.[0]?.id || "ROLE-RECEPCAO" });
-  };
+    const submitUser = async (event) => {
+        event.preventDefault();
+
+        const role = getRole(userForm.roleId, roles);
+
+        addUser({
+            name: userForm.name,
+            username: userForm.username,
+            email: userForm.email,
+            pin: userForm.pin,
+            roleId: role?.id || userForm.roleId,
+            roleName: role?.name || "",
+            active: userForm.active !== false,
+        });
+
+        setUserForm({
+            active: true,
+            roleId: data.roles?.[0]?.id || "ROLE-RECEPCAO"
+        });
+
+        setTimeout(() => {
+            syncNow();
+        }, 500);
+    };
   const submitRole = (event) => {
     event.preventDefault();
     const id = `ROLE-${normalizeKey(roleForm.name).replace(/\s+/g, "-").toUpperCase() || Date.now()}`;
