@@ -5036,18 +5036,43 @@ function Checkbox({ label, checked = false, onChange }) {
 }
 
 function Select({ label, value = "", options = [], onChange, required = false }) {
-  const id = useStableId(label);
-  return (
-    <label className="field" htmlFor={id}>
-      <span>{label}</span>
-      <select id={id} value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required}>
-        <option value="">Selecionar</option>
-        {(options ?? []).filter(Boolean).map((option) => (
-          <option key={option} value={option}>{option}</option>
-        ))}
-      </select>
-    </label>
-  );
+    const id = useStableId(label);
+
+    const normalizedOptions = (options ?? [])
+        .filter(Boolean)
+        .map((option) => {
+            if (typeof option === "object") {
+                return {
+                    value: option.value ?? option.id ?? "",
+                    label: option.label ?? option.name ?? option.value ?? ""
+                };
+            }
+
+            const text = String(option);
+            return {
+                value: text.includes(" - ") ? text.split(" - ")[0] : text,
+                label: text
+            };
+        });
+
+    return (
+        <label className="field" htmlFor={id}>
+            <span>{label}</span>
+            <select
+                id={id}
+                value={value ?? ""}
+                onChange={(event) => onChange(event.target.value)}
+                required={required}
+            >
+                <option value="">Selecionar</option>
+                {normalizedOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+        </label>
+    );
 }
 
 function useStableId(label) {
