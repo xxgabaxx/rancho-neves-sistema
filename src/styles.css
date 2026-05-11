@@ -25,6 +25,8 @@ select {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .authShell {
@@ -1552,8 +1554,12 @@ th {
   }
 
   .workspace {
-    padding: 16px;
-  }
+  padding: 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
 
   .topbar,
   .topActions {
