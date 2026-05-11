@@ -1614,6 +1614,41 @@ th {
     overflow-x: hidden;
     box-sizing: border-box;
   }
+
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .panel,
+  .formPanel,
+  .kpiCard,
+  .calendarWrap,
+  .tableWrap {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .availabilityTable,
+  table {
+    min-width: 640px;
+  }
+}
+
+  .sidebar {
+    display: none;
+  }
+
+  .workspace {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
 }
 
   .sidebar,
