@@ -340,18 +340,25 @@ function App() {
                       </h1>
                   </div>
 
-                  <div className="topActions">
-                      <span>Fonte: planilha importada</span>
+                    <div className="topActions">
+                        <span>Fonte: planilha importada</span>
 
-                      {can("reservas", "adicionar") && (
-                          <button
-                              className="primaryButton"
-                              onClick={() => changeTab("reservas")}
-                          >
-                              <Plus size={17} /> Nova reserva
-                          </button>
-                      )}
-                  </div>
+                        {can("reservas", "adicionar") && (
+                            <button
+                                className="primaryButton"
+                                onClick={() => changeTab("reservas")}
+                            >
+                                <Plus size={17} /> Nova reserva
+                            </button>
+                        )}
+
+                        <button
+                            className="ghostButton"
+                            onClick={lockSystem}
+                        >
+                            Sair
+                        </button>
+                    </div>
 
               </header>
 
