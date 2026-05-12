@@ -1709,3 +1709,16 @@ th {
   font-weight: 800;
   cursor: pointer;
 }
+
+@media (min-width: 721px) {
+  .mobileMenuButton,
+  .mobileCloseButton {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+}
