@@ -1618,7 +1618,6 @@ th {
 
 @media (max-width: 720px) {
 
-.mobileCloseButton {
   .mobileCloseButton {
     display: block !important;
     width: 100%;
@@ -1643,7 +1642,7 @@ th {
     border-radius: 10px;
     font-weight: 700;
     margin-bottom: 14px;
-  }  
+  }
 }
 
   .sidebar {
