@@ -1615,28 +1615,25 @@ th {
   }
 }
 
-.mobileMenuButton,
-.mobileCloseButton {
-  display: none !important;
-}
 
 @media (max-width: 720px) {
 
 .mobileCloseButton {
-  display: block !important;
-  width: 100%;
-  background: transparent;
-  color: white;
-  border: 0;
-  font-weight: 900;
-  text-align: right;
-  margin-bottom: 18px;
-  font-size: 16px;
-  cursor: pointer;
-}
+  .mobileCloseButton {
+    display: block !important;
+    width: 100%;
+    background: transparent;
+    color: white;
+    border: 0;
+    font-weight: 900;
+    text-align: right;
+    margin-bottom: 18px;
+    font-size: 16px;
+    cursor: pointer;
+  }
 
   .mobileMenuButton {
-    display: flex;
+    display: flex !important;
     align-items: center;
     gap: 8px;
     background: #2e6d43;
@@ -1646,7 +1643,8 @@ th {
     border-radius: 10px;
     font-weight: 700;
     margin-bottom: 14px;
-  }
+  }  
+}
 
   .sidebar {
     position: fixed;
