@@ -1615,6 +1615,11 @@ th {
   }
 }
 
+.mobileMenuButton,
+.mobileCloseButton {
+  display: none;
+}
+
 @media (max-width: 720px) {
 
 .mobileCloseButton {
