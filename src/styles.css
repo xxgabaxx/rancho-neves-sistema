@@ -1501,17 +1501,22 @@ th {
   line-height: 1.55;
 }
 
+.mobileMenuButton,
+.mobileCloseButton {
+  display: none !important;
+}
+
 @media (max-width: 1100px) {
   .appShell {
     grid-template-columns: 1fr;
   }
 
   .sidebar {
-  position: relative;
-  width: 100%;
-  height: auto;
-  top: auto;
-}
+    position: relative;
+    width: 100%;
+    height: auto;
+    top: auto;
+  }
 
   nav {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1526,98 +1531,6 @@ th {
 }
 
 @media (max-width: 720px) {
-  .authTopbar,
-  .authMain {
-    width: min(100% - 28px, 460px);
-  }
-
-.topActions {
-  width: 100%;
-}
-
-.topActions .ghostButton {
-  width: 100%;
-}
-
-  .authTopbar {
-    align-items: flex-start;
-    flex-direction: column;
-    padding-top: 18px;
-  }
-
-  .authMain {
-    min-height: 100vh;
-    padding: 76px 0 28px;
-  }
-
-  .authCard {
-    padding: 20px;
-  }
-
-  .authLogo {
-    width: 82px;
-  }
-
-  .authClientLogo {
-    width: min(190px, 76%);
-    height: 96px;
-  }
-
-  .authCard h1 {
-    font-size: 28px;
-  }
-
-  .authOptions,
-  .authFooter {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .workspace {
-  padding: 16px;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
-  .topbar,
-  .topActions {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  nav,
-  .kpiGrid,
-  .contentGrid.two,
-  .contentGrid.three,
-  .formGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .barRow {
-    grid-template-columns: 1fr;
-  }
-
-  .calendarControls {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .operationHeader,
-  .operationStats,
-  .reportHeader,
-  .reportHeadline,
-  .documentControls,
-  .signatureGrid,
-  .stayChecklistGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-@media (max-width: 720px) {
-
   .mobileCloseButton {
     display: block !important;
     width: 100%;
@@ -1644,6 +1557,12 @@ th {
     margin-bottom: 14px;
   }
 
+  .appShell {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
+
   .sidebar {
     position: fixed;
     top: 0;
@@ -1660,38 +1579,12 @@ th {
     left: 0;
   }
 
-  .workspace {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    padding: 14px;
-    overflow-x: hidden;
-    box-sizing: border-box;
+  .authTopbar,
+  .authMain {
+    width: min(100% - 28px, 460px);
   }
 
-  body,
-  #root {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  .workspace {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    padding: 14px;
-    overflow-x: hidden;
-    box-sizing: border-box;
-  }
-
-  body,
-  #root {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
+  .authTopbar,
   .topbar,
   .topActions,
   .authOptions,
@@ -1699,6 +1592,44 @@ th {
   .calendarControls {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .authMain {
+    min-height: 100vh;
+    padding: 76px 0 28px;
+  }
+
+  .authCard {
+    padding: 20px;
+  }
+
+  .authLogo {
+    width: 82px;
+  }
+
+  .authClientLogo {
+    width: min(190px, 76%);
+    height: 96px;
+  }
+
+  .authCard h1 {
+    font-size: 28px;
+  }
+
+  .workspace {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   nav,
@@ -1730,10 +1661,17 @@ th {
   table {
     min-width: 640px;
   }
+
+  .topActions {
+    width: 100%;
+  }
+
+  .topActions .ghostButton {
+    width: 100%;
+  }
 }
 
 @media print {
-
   body {
     background: #ffffff;
   }
