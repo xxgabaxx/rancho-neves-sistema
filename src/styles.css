@@ -1643,7 +1643,6 @@ th {
     font-weight: 700;
     margin-bottom: 14px;
   }
-}
 
   .sidebar {
     position: fixed;
@@ -1660,6 +1659,8 @@ th {
   .sidebar.mobileOpen {
     left: 0;
   }
+
+}
 
   .workspace {
     display: block;
