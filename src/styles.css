@@ -1617,13 +1617,13 @@ th {
 
 .mobileMenuButton,
 .mobileCloseButton {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 720px) {
 
 .mobileCloseButton {
-  display: block;
+  display: block !important;
   width: 100%;
   background: transparent;
   color: white;
