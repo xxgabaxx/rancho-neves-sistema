@@ -20,6 +20,7 @@ const TABLES = [
   "purchase_invoice_items",
   "supplier_product_mappings",
   "accounts_payable",
+  "accounts_receivable",
   "guest_profiles",
   "users",
   "roles",

@@ -106,7 +106,8 @@ const collectionModules = {
   purchaseInvoices: "estoque",
   purchaseInvoiceItems: "estoque",
   supplierProductMappings: "estoque",
-  accountsPayable: "estoque",
+  accountsPayable: "financeiro",
+  accountsReceivable: "financeiro",
   users: "usuarios",
   roles: "usuarios",
   rolePermissions: "usuarios",
@@ -399,7 +400,18 @@ function App() {
             updateItem={guardedUpdateItem}
           />
         )}
-        {safeActive === "financeiro" && <Financeiro data={store.data} addFinanceiro={guardedAddFinanceiro} removeItem={guardedRemoveItem} />}
+        {safeActive === "financeiro" && (
+          <Financeiro
+            data={store.data}
+            addFinanceiro={guardedAddFinanceiro}
+            addAccountPayable={guardedAdd("accountsPayable", store.addAccountPayable)}
+            addAccountReceivable={guardedAdd("accountsReceivable", store.addAccountReceivable)}
+            addPagamento={guardedAdd("pagamentos", store.addPagamento)}
+            updateItem={guardedUpdateItem}
+            removeItem={guardedRemoveItem}
+            canAction={can}
+          />
+        )}
         {safeActive === "estoque" && (
           <Estoque
             data={store.data}
@@ -2257,7 +2269,401 @@ function getRole(idOrLabel, roles = []) {
   return roles.find((role) => role.id === clean);
 }
 
-function Financeiro({ data, addFinanceiro, removeItem }) {
+function Financeiro({ data, addFinanceiro, addAccountPayable, addAccountReceivable, addPagamento, updateItem, removeItem, canAction = () => true }) {
+  const [view, setView] = useState("resumo");
+  return (
+    <div className="viewStack">
+      <div className="segmented">
+        <button className={view === "resumo" ? "active" : ""} onClick={() => setView("resumo")}>Visão geral</button>
+        <button className={view === "receber" ? "active" : ""} onClick={() => setView("receber")}>Contas a receber</button>
+        <button className={view === "pagar" ? "active" : ""} onClick={() => setView("pagar")}>Contas a pagar</button>
+        <button className={view === "lancamentos" ? "active" : ""} onClick={() => setView("lancamentos")}>Lançamentos</button>
+      </div>
+      {view === "resumo" && <ResumoFinanceiro data={data} onNavigate={setView} />}
+      {view === "receber" && (
+        <GestaoContas
+          kind="receber"
+          data={data}
+          addAccount={addAccountReceivable}
+          addFinanceiro={addFinanceiro}
+          addPagamento={addPagamento}
+          updateItem={updateItem}
+          removeItem={removeItem}
+          canAction={canAction}
+        />
+      )}
+      {view === "pagar" && (
+        <GestaoContas
+          kind="pagar"
+          data={data}
+          addAccount={addAccountPayable}
+          addFinanceiro={addFinanceiro}
+          updateItem={updateItem}
+          removeItem={removeItem}
+          canAction={canAction}
+        />
+      )}
+      {view === "lancamentos" && <LancamentosFinanceiros data={data} addFinanceiro={addFinanceiro} removeItem={removeItem} />}
+    </div>
+  );
+}
+
+const accountKindConfig = {
+  receber: {
+    collection: "accountsReceivable",
+    financeCollection: "receitasExtras",
+    settledStatus: "recebido",
+    nameField: "partyName",
+    nameLabel: "Cliente / pagador",
+    settledAtField: "receivedAt",
+    settleVerb: "Receber",
+    settledVerb: "Recebido",
+    title: "conta a receber",
+    defaultCategory: "Outra receita",
+    overdueLabel: "Recebimento atrasado",
+    flowSign: 1,
+  },
+  pagar: {
+    collection: "accountsPayable",
+    financeCollection: "despesas",
+    settledStatus: "pago",
+    nameField: "supplierName",
+    nameLabel: "Fornecedor / pago para",
+    settledAtField: "paidAt",
+    settleVerb: "Pagar",
+    settledVerb: "Pago",
+    title: "conta a pagar",
+    defaultCategory: "Outro",
+    overdueLabel: "Conta vencida",
+    flowSign: -1,
+  },
+};
+
+function ResumoFinanceiro({ data, onNavigate }) {
+  const receivableRows = buildReceivableRows(data);
+  const payableRows = buildPayableRows(data);
+  const ar = summarizeRows(receivableRows, { settledStatus: "recebido", overdueLabel: "Recebimento atrasado", dueSoonLabel: "A receber em breve" });
+  const ap = summarizeRows(payableRows, { settledStatus: "pago", overdueLabel: "Conta a pagar vencida", dueSoonLabel: "Pagamento próximo" });
+  const saldoPrevisto = ar.openTotal - ap.openTotal;
+  const realized = monthlyRealizedResult(data);
+  const recebidoMes = realized.income;
+  const pagoMes = realized.expense;
+
+  const today = parseDate(isoDate(new Date()));
+  const limit = addDays(today, 30);
+  const events = [
+    ...receivableRows.map((row) => ({ row, sign: 1, kind: "Receber" })),
+    ...payableRows.map((row) => ({ row, sign: -1, kind: "Pagar" })),
+  ]
+    .filter(({ row }) => !["pago", "recebido", "cancelado"].includes(row.status))
+    .filter(({ row }) => {
+      const due = parseDate(row.dueDate);
+      return !Number.isNaN(due.getTime()) && due <= limit;
+    })
+    .sort((a, b) => parseDate(a.row.dueDate) - parseDate(b.row.dueDate));
+
+  let running = 0;
+  const flowRows = events.map(({ row, sign, kind }) => {
+    running += sign * numberValue(row.amount);
+    return [
+      formatDate(row.dueDate),
+      kind,
+      row.name || "—",
+      <span className={sign > 0 ? "" : "negative"}>{`${sign > 0 ? "+" : "−"} ${formatCurrency(row.amount)}`}</span>,
+      <strong className={running < 0 ? "negative" : ""}>{formatCurrency(running)}</strong>,
+    ];
+  });
+
+  const alerts = [...ap.alerts, ...ar.alerts];
+
+  return (
+    <div className="viewStack">
+      <section className="kpiGrid">
+        <article className="kpiCard"><span>A receber (aberto)</span><strong>{formatCurrency(ar.openTotal)}</strong></article>
+        <article className="kpiCard"><span>A pagar (aberto)</span><strong>{formatCurrency(ap.openTotal)}</strong></article>
+        <article className="kpiCard"><span>Saldo previsto</span><strong className={saldoPrevisto < 0 ? "negative" : ""}>{formatCurrency(saldoPrevisto)}</strong></article>
+        <article className="kpiCard"><span>Recebimentos vencidos</span><strong className={ar.overdueCount ? "negative" : ""}>{ar.overdueCount}</strong></article>
+        <article className="kpiCard"><span>Pagamentos vencidos</span><strong className={ap.overdueCount ? "negative" : ""}>{ap.overdueCount}</strong></article>
+        <article className="kpiCard"><span>Recebido no mês</span><strong>{formatCurrency(recebidoMes)}</strong></article>
+        <article className="kpiCard"><span>Pago no mês</span><strong>{formatCurrency(pagoMes)}</strong></article>
+        <article className="kpiCard"><span>Resultado do mês</span><strong className={recebidoMes - pagoMes < 0 ? "negative" : ""}>{formatCurrency(recebidoMes - pagoMes)}</strong></article>
+      </section>
+
+      {alerts.length > 0 && (
+        <Panel title="Alertas financeiros">
+          <div className="alertList">
+            {alerts.map((alert, idx) => (
+              <div className={`alertItem ${alert.type}`} key={idx}>
+                <strong>{alert.title}</strong>
+                <span>{alert.message}</span>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
+
+      <section className="contentGrid two">
+        <Panel title="Contas a receber">
+          <MetricLine label="Em aberto" value={formatCurrency(ar.openTotal)} />
+          <MetricLine label="Vencidas" value={`${ar.overdueCount} · ${formatCurrency(ar.overdueTotal)}`} />
+          <MetricLine label="Vence em 7 dias" value={`${ar.dueSoonCount} · ${formatCurrency(ar.dueSoonTotal)}`} />
+          <MetricLine label="Recebido (total)" value={formatCurrency(ar.settledTotal)} />
+          <button className="smallButton" onClick={() => onNavigate?.("receber")}>Abrir contas a receber</button>
+        </Panel>
+        <Panel title="Contas a pagar">
+          <MetricLine label="Em aberto" value={formatCurrency(ap.openTotal)} />
+          <MetricLine label="Vencidas" value={`${ap.overdueCount} · ${formatCurrency(ap.overdueTotal)}`} />
+          <MetricLine label="Vence em 7 dias" value={`${ap.dueSoonCount} · ${formatCurrency(ap.dueSoonTotal)}`} />
+          <MetricLine label="Pago (total)" value={formatCurrency(ap.settledTotal)} />
+          <button className="smallButton" onClick={() => onNavigate?.("pagar")}>Abrir contas a pagar</button>
+        </Panel>
+      </section>
+
+      <Panel title="Fluxo de caixa previsto (30 dias)">
+        <Table
+          columns={["Vencimento", "Tipo", "Descrição", "Movimento", "Saldo acumulado"]}
+          rows={flowRows}
+          empty="Sem lançamentos previstos para os próximos 30 dias."
+        />
+      </Panel>
+    </div>
+  );
+}
+
+function emptyAccountForm() {
+  return {
+    name: "",
+    category: "",
+    costCenter: "",
+    description: "",
+    amount: "",
+    issueDate: isoDate(new Date()),
+    dueDate: isoDate(new Date()),
+    method: "",
+    installmentLabel: "",
+    recurrence: "",
+    notes: "",
+  };
+}
+
+function GestaoContas({ kind, data, addAccount, addFinanceiro, addPagamento, updateItem, removeItem, canAction = () => true }) {
+  const config = accountKindConfig[kind];
+  const [form, setForm] = useState(emptyAccountForm);
+  const [statusFilter, setStatusFilter] = useState("");
+  const rows = kind === "receber" ? buildReceivableRows(data) : buildPayableRows(data);
+  const summary = summarizeRows(rows, {
+    settledStatus: config.settledStatus,
+    overdueLabel: config.overdueLabel,
+    dueSoonLabel: kind === "receber" ? "A receber em breve" : "Pagamento próximo",
+  });
+  const categoryList = kind === "receber" ? data.listas.receitas_extra : data.listas.categorias_despesa;
+  const canAdd = canAction("financeiro", "adicionar");
+  const canEdit = canAction("financeiro", "editar");
+
+  const submit = (event) => {
+    event.preventDefault();
+    if (!form.name && !form.description) return;
+    if (numberValue(form.amount) <= 0) return;
+    addAccount({
+      [config.nameField]: form.name,
+      category: form.category,
+      costCenter: form.costCenter,
+      description: form.description,
+      amount: numberValue(form.amount),
+      issueDate: form.issueDate,
+      dueDate: form.dueDate,
+      method: form.method,
+      installmentLabel: form.installmentLabel,
+      recurrence: form.recurrence,
+      notes: form.notes,
+      status: "aberto",
+      source: "manual",
+    });
+    setForm(emptyAccountForm());
+  };
+
+  const reverseFinancePosting = (item) => {
+    if (!item.financialPosted) return;
+    (data[config.financeCollection] || [])
+      .filter((row) => row.origem === config.collection && row.referenceId === item.id)
+      .forEach((row) => removeItem(config.financeCollection, row.id));
+  };
+
+  const settleAccount = (item) => {
+    if (item.status === config.settledStatus || item.status === "cancelado") return;
+    const settledAt = isoDate(new Date());
+    if (addFinanceiro && !item.financialPosted) {
+      addFinanceiro(config.financeCollection, {
+        data: settledAt,
+        categoria: item.category || config.defaultCategory,
+        nome: item[config.nameField] || "—",
+        descricao: item.description || item.installmentLabel || "",
+        valor: numberValue(item.amount),
+        formaPagamento: item.method || "",
+        origem: config.collection,
+        referenceId: item.id,
+      });
+    }
+    updateItem(config.collection, item.id, {
+      status: config.settledStatus,
+      [config.settledAtField]: settledAt,
+      financialPosted: true,
+    });
+    if (item.recurrence) {
+      addAccount({
+        [config.nameField]: item[config.nameField] || "",
+        category: item.category || "",
+        costCenter: item.costCenter || "",
+        description: item.description || "",
+        amount: numberValue(item.amount),
+        issueDate: nextRecurrenceDate(item.issueDate || item.dueDate, item.recurrence),
+        dueDate: nextRecurrenceDate(item.dueDate, item.recurrence),
+        method: item.method || "",
+        installmentLabel: item.installmentLabel || "",
+        recurrence: item.recurrence,
+        notes: item.notes || "",
+        status: "aberto",
+        source: "recorrencia",
+        financialPosted: false,
+      });
+    }
+  };
+
+  const changeStatus = (item, status) => {
+    if (status === item.status) return;
+    if (status === config.settledStatus) {
+      settleAccount(item);
+      return;
+    }
+    if (item.status === config.settledStatus || item.financialPosted) {
+      reverseFinancePosting(item);
+    }
+    updateItem(config.collection, item.id, {
+      status,
+      financialPosted: false,
+      [config.settledAtField]: status === "aberto" ? "" : item[config.settledAtField] || "",
+    });
+  };
+
+  const removeNative = (item) => {
+    if (item.financialPosted) reverseFinancePosting(item);
+    secureRemove(config.collection, item.id, removeItem, config.title);
+  };
+
+  const receiveReservation = (row) => {
+    if (!addPagamento) return;
+    const today = isoDate(new Date());
+    addPagamento({
+      reservaId: row.reserva.id,
+      hospede: row.reserva.hospede || "",
+      cabana: row.reserva.cabana || "",
+      data: today,
+      vencimento: row.dueDate || today,
+      valor: numberValue(row.amount),
+      status: "Recebido",
+      tipo: "Restante check-out",
+      parcela: "Saldo",
+      conciliado: "Não",
+    });
+  };
+
+  const statusOptions = ["aberto", config.settledStatus, "vencido", "cancelado"];
+  const sorted = sortRows(rows, config.settledStatus);
+  const filtered = sorted.filter((row) => !statusFilter || row.status === statusFilter);
+
+  return (
+    <div className="viewStack">
+      <section className="kpiGrid">
+        <article className="kpiCard"><span>Em aberto</span><strong>{formatCurrency(summary.openTotal)}</strong></article>
+        <article className="kpiCard"><span>Lançamentos abertos</span><strong>{summary.openCount}</strong></article>
+        <article className="kpiCard"><span>Vencidas</span><strong className={summary.overdueCount ? "negative" : ""}>{summary.overdueCount}</strong></article>
+        <article className="kpiCard"><span>Total vencido</span><strong className={summary.overdueTotal ? "negative" : ""}>{formatCurrency(summary.overdueTotal)}</strong></article>
+        <article className="kpiCard"><span>Vence em 7 dias</span><strong>{summary.dueSoonCount}</strong></article>
+        <article className="kpiCard"><span>{config.settledVerb} (total)</span><strong>{formatCurrency(summary.settledTotal)}</strong></article>
+      </section>
+
+      <FormPanel
+        title={`Lançar ${config.title}`}
+        onSubmit={submit}
+        submitLabel={`Salvar ${config.title}`}
+        disabled={!canAdd || numberValue(form.amount) <= 0 || (!form.name && !form.description)}
+      >
+        <Input label={config.nameLabel} value={form.name} onChange={(name) => setForm({ ...form, name })} />
+        <Select label="Categoria" value={form.category} options={categoryList} onChange={(category) => setForm({ ...form, category })} />
+        <Select label="Centro de custo" value={form.costCenter} options={data.listas.centro_custo} onChange={(costCenter) => setForm({ ...form, costCenter })} />
+        <Input label="Descrição" value={form.description} onChange={(description) => setForm({ ...form, description })} />
+        <Input label="Valor" type="number" value={form.amount} onChange={(amount) => setForm({ ...form, amount })} required />
+        <Input label="Emissão" type="date" value={form.issueDate} onChange={(issueDate) => setForm({ ...form, issueDate })} />
+        <Input label="Vencimento" type="date" value={form.dueDate} onChange={(dueDate) => setForm({ ...form, dueDate })} required />
+        <Select label="Forma de pagamento" value={form.method} options={data.listas.formas_pgto} onChange={(method) => setForm({ ...form, method })} />
+        <Input label="Parcela" value={form.installmentLabel} onChange={(installmentLabel) => setForm({ ...form, installmentLabel })} />
+        <Select label="Recorrência" value={form.recurrence} options={recurrenceOptions} onChange={(recurrence) => setForm({ ...form, recurrence })} />
+        <Input label="Observações" value={form.notes} onChange={(notes) => setForm({ ...form, notes })} />
+      </FormPanel>
+
+      {summary.alerts.length > 0 && (
+        <Panel title="Alertas">
+          <div className="alertList">
+            {summary.alerts.map((alert, idx) => (
+              <div className={`alertItem ${alert.type}`} key={idx}>
+                <strong>{alert.title}</strong>
+                <span>{alert.message}</span>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
+
+      <Panel title={kind === "receber" ? "Contas a receber" : "Contas a pagar"}>
+        <div className="filterBar">
+          <Select label="Status" value={statusFilter} options={statusOptions.map((status) => accountStatusLabels[status] || status)} onChange={(label) => {
+            const found = statusOptions.find((status) => (accountStatusLabels[status] || status) === label);
+            setStatusFilter(found || "");
+          }} />
+        </div>
+        <Table
+          columns={["Vencimento", kind === "receber" ? "Cliente" : "Fornecedor", "Categoria", "Descrição", "Parcela", "Valor", "Status", "Ações"]}
+          rows={filtered.map((row) => {
+            const settled = row.status === config.settledStatus;
+            const cancelled = row.status === "cancelado";
+            const isReserva = row.source === "reserva";
+            return [
+              formatDate(row.dueDate),
+              <div className="cellStack"><span>{row.name || "—"}</span>{row.badge && <span className="tag muted">{row.badge}</span>}</div>,
+              row.category || "—",
+              row.description || "—",
+              row.installmentLabel || "—",
+              formatCurrency(row.amount),
+              isReserva ? (
+                <span className={accountStatusClass(row.status)}>{accountStatusLabels[row.status] || row.status}</span>
+              ) : (
+                <InlineSelect
+                  value={row.status}
+                  options={statusOptions}
+                  onChange={(status) => canEdit && changeStatus(row.native, status)}
+                />
+              ),
+              isReserva ? (
+                <div className="rowActions">
+                  <button className="smallButton" disabled={!canAdd} onClick={() => receiveReservation(row)}>{config.settleVerb}</button>
+                </div>
+              ) : (
+                <div className="rowActions">
+                  <button className="smallButton" disabled={settled || cancelled || !canEdit} onClick={() => settleAccount(row.native)}>{config.settleVerb}</button>
+                  <button className="smallButton mutedButton" disabled={cancelled || !canEdit} onClick={() => changeStatus(row.native, "cancelado")}>Cancelar</button>
+                  <IconButton title="Excluir" onClick={() => removeNative(row.native)} icon={Trash2} />
+                </div>
+              ),
+            ];
+          })}
+          empty={`Nenhuma ${config.title} lançada.`}
+        />
+      </Panel>
+    </div>
+  );
+}
+
+function LancamentosFinanceiros({ data, addFinanceiro, removeItem }) {
   const [kind, setKind] = useState("receitasExtras");
   const [form, setForm] = useState({});
   const submit = (event) => {
@@ -3725,28 +4131,40 @@ function unitConversionFactor(from, to) {
   return 1;
 }
 
-function payableAutoStatus(item) {
-  if (item.status === "pago" || item.status === "cancelado") return item.status;
+function accountAutoStatus(item, settledStatus = "pago") {
+  if (item.status === settledStatus || item.status === "cancelado") return item.status;
   const due = parseDate(item.dueDate);
   const today = parseDate(isoDate(new Date()));
   return !Number.isNaN(due.getTime()) && due < today ? "vencido" : (item.status || "aberto");
 }
 
-function sortAccountsPayable(rows = []) {
-  const statusWeight = { vencido: 0, aberto: 1, pago: 2, cancelado: 3 };
+function payableAutoStatus(item) {
+  return accountAutoStatus(item, "pago");
+}
+
+function receivableAutoStatus(item) {
+  return accountAutoStatus(item, "recebido");
+}
+
+function sortAccounts(rows = [], settledStatus = "pago") {
+  const statusWeight = { vencido: 0, aberto: 1, [settledStatus]: 2, cancelado: 3 };
   return [...rows].sort((a, b) => {
-    const statusA = payableAutoStatus(a);
-    const statusB = payableAutoStatus(b);
+    const statusA = accountAutoStatus(a, settledStatus);
+    const statusB = accountAutoStatus(b, settledStatus);
     if (statusWeight[statusA] !== statusWeight[statusB]) return statusWeight[statusA] - statusWeight[statusB];
     return parseDate(a.dueDate) - parseDate(b.dueDate);
   });
 }
 
-function buildAccountsPayableSummary(rows = []) {
+function sortAccountsPayable(rows = []) {
+  return sortAccounts(rows, "pago");
+}
+
+function buildAccountsSummary(rows = [], { settledStatus = "pago", nameField = "supplierName", overdueLabel = "Conta vencida", dueSoonLabel = "Vencimento próximo", verb = "venceu", verbFuture = "vence" } = {}) {
   const today = parseDate(isoDate(new Date()));
   const dueLimit = addDays(today, 7);
-  const active = rows.filter((item) => !["pago", "cancelado"].includes(item.status));
-  const paid = rows.filter((item) => item.status === "pago");
+  const active = rows.filter((item) => ![settledStatus, "cancelado"].includes(item.status));
+  const settled = rows.filter((item) => item.status === settledStatus);
   const cancelled = rows.filter((item) => item.status === "cancelado");
   const overdue = active.filter((item) => {
     const due = parseDate(item.dueDate);
@@ -3760,24 +4178,194 @@ function buildAccountsPayableSummary(rows = []) {
   const alerts = [
     ...overdue.slice(0, 5).map((item) => ({
       type: "danger",
-      title: "Conta vencida",
-      message: `${item.supplierName || "Fornecedor"}: ${formatCurrency(item.amount)} venceu em ${formatDate(item.dueDate)}.`,
+      title: overdueLabel,
+      message: `${item[nameField] || "—"}: ${formatCurrency(item.amount)} ${verb} em ${formatDate(item.dueDate)}.`,
     })),
     ...dueSoon.slice(0, 5).map((item) => ({
       type: "warn",
-      title: "Vencimento próximo",
-      message: `${item.supplierName || "Fornecedor"}: ${formatCurrency(item.amount)} vence em ${formatDate(item.dueDate)}.`,
+      title: dueSoonLabel,
+      message: `${item[nameField] || "—"}: ${formatCurrency(item.amount)} ${verbFuture} em ${formatDate(item.dueDate)}.`,
     })),
   ];
   return {
     openCount: active.length,
     openTotal,
     overdueCount: overdue.length,
+    overdueTotal: overdue.reduce((total, item) => total + numberValue(item.amount), 0),
     dueSoonCount: dueSoon.length,
-    paidTotal: paid.reduce((total, item) => total + numberValue(item.amount), 0),
+    dueSoonTotal: dueSoon.reduce((total, item) => total + numberValue(item.amount), 0),
+    settledTotal: settled.reduce((total, item) => total + numberValue(item.amount), 0),
+    paidTotal: settled.reduce((total, item) => total + numberValue(item.amount), 0),
     cancelledTotal: cancelled.reduce((total, item) => total + numberValue(item.amount), 0),
     alerts,
   };
+}
+
+function buildAccountsPayableSummary(rows = []) {
+  return buildAccountsSummary(rows, {
+    settledStatus: "pago",
+    nameField: "supplierName",
+    overdueLabel: "Conta a pagar vencida",
+    dueSoonLabel: "Pagamento próximo",
+  });
+}
+
+function buildAccountsReceivableSummary(rows = []) {
+  return buildAccountsSummary(rows, {
+    settledStatus: "recebido",
+    nameField: "partyName",
+    overdueLabel: "Recebimento atrasado",
+    dueSoonLabel: "A receber em breve",
+  });
+}
+
+function reservationDueStatus(checkOut) {
+  const due = parseDate(checkOut);
+  const today = parseDate(isoDate(new Date()));
+  if (!Number.isNaN(due.getTime()) && due < today) return "vencido";
+  return "aberto";
+}
+
+function normalizeNativeRow(item, { settledStatus, nameField, settledAtField }) {
+  const badge = item.source === "recorrencia" ? "Recorrência" : item.source === "reserva" ? "Reserva" : "";
+  return {
+    key: item.id,
+    source: item.source || "manual",
+    native: item,
+    id: item.id,
+    name: item[nameField] || "—",
+    category: item.category || "",
+    description: item.description || "",
+    installmentLabel: item.installmentLabel || "",
+    amount: numberValue(item.amount),
+    dueDate: item.dueDate || "",
+    status: accountAutoStatus(item, settledStatus),
+    settledAt: item[settledAtField] || "",
+    method: item.method || "",
+    badge,
+  };
+}
+
+function reservationReceivableRows(data) {
+  return (data.reservas || [])
+    .filter((reserva) => reserva.status !== "Cancelado")
+    .map((reserva) => ({ reserva, folio: calcReservationFolio(reserva, data.consumos, data.pagamentos) }))
+    .filter(({ folio }) => folio.saldo > 0.005)
+    .map(({ reserva, folio }) => ({
+      key: `RES-${reserva.id}`,
+      source: "reserva",
+      reserva,
+      id: reserva.id,
+      name: reserva.hospede || "Hóspede",
+      category: "Hospedagem",
+      description: `Saldo reserva ${reserva.id}${reserva.cabana ? ` · ${reserva.cabana}` : ""}`,
+      installmentLabel: "Saldo",
+      amount: folio.saldo,
+      dueDate: reserva.checkOut || "",
+      status: reservationDueStatus(reserva.checkOut),
+      settledAt: "",
+      method: "",
+      badge: "Reserva",
+    }));
+}
+
+function buildReceivableRows(data) {
+  const native = (data.accountsReceivable || []).map((item) =>
+    normalizeNativeRow(item, { settledStatus: "recebido", nameField: "partyName", settledAtField: "receivedAt" }),
+  );
+  return [...reservationReceivableRows(data), ...native];
+}
+
+function buildPayableRows(data) {
+  return (data.accountsPayable || []).map((item) =>
+    normalizeNativeRow(item, { settledStatus: "pago", nameField: "supplierName", settledAtField: "paidAt" }),
+  );
+}
+
+function sortRows(rows = [], settledStatus = "pago") {
+  const weight = { vencido: 0, aberto: 1, [settledStatus]: 2, cancelado: 3 };
+  return [...rows].sort((a, b) => {
+    const wa = weight[a.status] ?? 1;
+    const wb = weight[b.status] ?? 1;
+    if (wa !== wb) return wa - wb;
+    return parseDate(a.dueDate) - parseDate(b.dueDate);
+  });
+}
+
+function summarizeRows(rows = [], { settledStatus = "pago", overdueLabel = "Vencida", dueSoonLabel = "Vence em breve", verb = "venceu", verbFuture = "vence" } = {}) {
+  const today = parseDate(isoDate(new Date()));
+  const dueLimit = addDays(today, 7);
+  const active = rows.filter((row) => !["recebido", "pago", "cancelado"].includes(row.status));
+  const settled = rows.filter((row) => row.status === settledStatus);
+  const cancelled = rows.filter((row) => row.status === "cancelado");
+  const overdue = active.filter((row) => row.status === "vencido");
+  const dueSoon = active.filter((row) => {
+    const due = parseDate(row.dueDate);
+    return !Number.isNaN(due.getTime()) && today <= due && due <= dueLimit;
+  });
+  const sumAmt = (list) => list.reduce((total, row) => total + numberValue(row.amount), 0);
+  const alerts = [
+    ...overdue.slice(0, 5).map((row) => ({ type: "danger", title: overdueLabel, message: `${row.name}: ${formatCurrency(row.amount)} ${verb} em ${formatDate(row.dueDate)}.` })),
+    ...dueSoon.slice(0, 5).map((row) => ({ type: "warn", title: dueSoonLabel, message: `${row.name}: ${formatCurrency(row.amount)} ${verbFuture} em ${formatDate(row.dueDate)}.` })),
+  ];
+  return {
+    openCount: active.length,
+    openTotal: sumAmt(active),
+    overdueCount: overdue.length,
+    overdueTotal: sumAmt(overdue),
+    dueSoonCount: dueSoon.length,
+    dueSoonTotal: sumAmt(dueSoon),
+    settledTotal: sumAmt(settled),
+    cancelledTotal: sumAmt(cancelled),
+    alerts,
+  };
+}
+
+function monthlyRealizedResult(data) {
+  const monthPrefix = isoDate(new Date()).slice(0, 7);
+  const inMonth = (value) => String(value ?? "").startsWith(monthPrefix);
+  const receitasExtras = (data.receitasExtras || []).filter((item) => inMonth(item.data)).reduce((total, item) => total + numberValue(item.valor), 0);
+  const pagamentos = (data.pagamentos || [])
+    .filter((item) => inMonth(item.data))
+    .filter((item) => !item.status || ["Recebido", "Conciliado"].includes(item.status))
+    .reduce((total, item) => total + numberValue(item.valor), 0);
+  const cavalosReceita = (data.movCavalos || []).filter((item) => item.tipo === "Receita" && inMonth(item.data)).reduce((total, item) => total + numberValue(item.valor), 0);
+  const despesas = (data.despesas || []).filter((item) => inMonth(item.data)).reduce((total, item) => total + numberValue(item.valor), 0);
+  const cavalosDespesa = (data.movCavalos || []).filter((item) => item.tipo === "Despesa" && inMonth(item.data)).reduce((total, item) => total + numberValue(item.valor), 0);
+  const income = receitasExtras + pagamentos + cavalosReceita;
+  const expense = despesas + cavalosDespesa;
+  return { income, expense, result: income - expense };
+}
+
+function nextRecurrenceDate(value, recurrence) {
+  const base = parseDate(value);
+  if (Number.isNaN(base.getTime())) return "";
+  if (recurrence === "Semanal") return isoDate(addDays(base, 7));
+  if (recurrence === "Quinzenal") return isoDate(addDays(base, 15));
+  if (recurrence === "Anual") {
+    const copy = new Date(base);
+    copy.setFullYear(copy.getFullYear() + 1);
+    return isoDate(copy);
+  }
+  const copy = new Date(base);
+  copy.setMonth(copy.getMonth() + 1);
+  return isoDate(copy);
+}
+
+const recurrenceOptions = ["Mensal", "Semanal", "Quinzenal", "Anual"];
+const accountStatusLabels = {
+  aberto: "Aberto",
+  vencido: "Vencido",
+  pago: "Pago",
+  recebido: "Recebido",
+  cancelado: "Cancelado",
+};
+
+function accountStatusClass(status) {
+  if (status === "vencido") return "status danger";
+  if (status === "pago" || status === "recebido") return "status";
+  if (status === "cancelado") return "status warn";
+  return "status warn";
 }
 
 function movementSign(type) {
@@ -4849,6 +5437,7 @@ function backupTables(data) {
     { name: "itens-notas-compra", label: "Itens notas compra", rows: data.purchaseInvoiceItems ?? [] },
     { name: "mapeamento-fornecedor", label: "Map. fornecedor", rows: data.supplierProductMappings ?? [] },
     { name: "contas-pagar", label: "Contas a pagar", rows: data.accountsPayable ?? [] },
+    { name: "contas-receber", label: "Contas a receber", rows: data.accountsReceivable ?? [] },
     { name: "crm-hospedes", label: "CRM hóspedes", rows: data.guestProfiles ?? [] },
     { name: "usuarios", label: "Usuários", rows: data.users ?? [] },
     { name: "perfis", label: "Perfis", rows: data.roles ?? [] },

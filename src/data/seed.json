@@ -1299,6 +1299,7 @@
   "purchaseInvoiceItems": [],
   "supplierProductMappings": [],
   "accountsPayable": [],
+  "accountsReceivable": [],
   "guestProfiles": [],
   "users": [],
   "roles": [],

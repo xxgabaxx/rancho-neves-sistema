@@ -25,6 +25,7 @@ const localCollections = [
   "purchaseInvoiceItems",
   "supplierProductMappings",
   "accountsPayable",
+  "accountsReceivable",
   "guestProfiles",
   "users",
   "roles",
@@ -70,9 +71,9 @@ const roleTemplates = {
     lancar: ["estoque"],
   },
   "ROLE-ESTOQUE": {
-    ler: ["dashboard", "estoque", "relatorios"],
-    adicionar: ["estoque"],
-    editar: ["estoque"],
+    ler: ["dashboard", "estoque", "financeiro", "relatorios"],
+    adicionar: ["estoque", "financeiro"],
+    editar: ["estoque", "financeiro"],
     apagar: ["estoque"],
     lancar: ["estoque"],
   },
@@ -265,6 +266,9 @@ export function useRanchoStore(seed) {
       },
       addAccountPayable(payload) {
         addItem("accountsPayable", { status: "aberto", ...payload });
+      },
+      addAccountReceivable(payload) {
+        addItem("accountsReceivable", { status: "aberto", ...payload });
       },
       addGuestProfile(payload) {
         addItem("guestProfiles", payload);
